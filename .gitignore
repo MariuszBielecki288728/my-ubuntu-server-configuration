@@ -1,0 +1,4 @@
+.env
+autoinstall.yaml
+*.iso
+server/

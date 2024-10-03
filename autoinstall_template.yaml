@@ -1,0 +1,52 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  identity:
+    realname: 'Ubuntu Server User'
+    username: ubuntu
+    password: ${HASHED_PASSWORD}
+    hostname: ubuntu-server
+
+  refresh-installer:
+   update: true
+
+  keyboard:
+    layout: pl
+
+  drivers:
+    install: true
+
+  updates: all
+  shutdown: poweroff
+
+  ssh:
+    install-server: true
+    allow-pw: false
+    authorized-keys:
+      - ${SSH_PUBLIC_KEY}
+
+  packages:
+    - git
+    - docker.io
+    - docker-compose
+    - micro
+    - curl
+
+  storage:
+    layout:
+      name: direct
+
+  user-data:
+    runcmd:
+      - systemctl enable docker.service
+      - systemctl start docker.service
+
+    write_files:
+      - path: /home/ubuntu/.netrc
+        content: |
+          machine github.com
+          login git
+          password ${GITHUB_TOKEN}
+        permissions: '0600'
+        owner: ubuntu:ubuntu
