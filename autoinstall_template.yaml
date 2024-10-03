@@ -2,12 +2,6 @@
 autoinstall:
   version: 1
 
-  identity:
-    realname: 'Ubuntu Server User'
-    username: ubuntu
-    password: ${HASHED_PASSWORD}
-    hostname: ubuntu-server
-
   refresh-installer:
    update: true
 
@@ -29,7 +23,7 @@ autoinstall:
   packages:
     - git
     - docker.io
-    - docker-compose
+    - docker-compose-v2
     - micro
     - curl
 
@@ -38,6 +32,17 @@ autoinstall:
       name: direct
 
   user-data:
+    users:
+      - name: ubuntu
+        gecos: 'Ubuntu Server Userr'
+        sudo: ALL=(ALL) (ALL)
+        passwd: '${HASHED_PASSWORD}'
+        groups: [adm, dip, lxd, sudo, docker]
+        shell: /bin/bash
+        lock_passwd: False
+    groups:
+      - docker
+
     runcmd:
       - systemctl enable docker.service
       - systemctl start docker.service
